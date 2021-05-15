@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0006_remove_more_links'),
+        ('atm_api', '0006_remove_more_links'),
     ]
 
     operations = [

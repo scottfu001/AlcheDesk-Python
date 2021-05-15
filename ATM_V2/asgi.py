@@ -1,5 +1,5 @@
 """
-ASGI config for ATM_V2 project.
+ASGI config for atm_v2 project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ATM_V2.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'atm_v2.settings')
 
 application = get_asgi_application()

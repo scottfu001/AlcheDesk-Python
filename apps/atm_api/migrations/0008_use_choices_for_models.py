@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0007_remove_more_models'),
+        ('atm_api', '0007_remove_more_models'),
     ]
 
     operations = [
@@ -31,12 +31,14 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='runexecutioninfo',
             name='run_type',
-            field=models.CharField(choices=[('PRD', 'Production'), ('DEV', 'Development')], default='PRD', max_length=3),
+            field=models.CharField(choices=[(
+                'PRD', 'Production'), ('DEV', 'Development')], default='PRD', max_length=3),
         ),
         migrations.AddField(
             model_name='runexecutioninfo',
             name='status',
-            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), ('STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
+            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), (
+                'STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
         ),
         migrations.AlterField(
             model_name='driverpackdriveraliasmap',
@@ -51,7 +53,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='executionlog',
             name='log_level',
-            field=models.CharField(choices=[('ERROR', 'Error'), ('WARN', 'Warn'), ('INFO', 'Info'), ('DEBUG', 'Debug'), ('TRACE', 'Trace')], default='INFO', max_length=5),
+            field=models.CharField(choices=[('ERROR', 'Error'), ('WARN', 'Warn'), ('INFO', 'Info'), (
+                'DEBUG', 'Debug'), ('TRACE', 'Trace')], default='INFO', max_length=5),
         ),
         migrations.AlterField(
             model_name='instructionoptionmap',
@@ -66,12 +69,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='instructionresult',
             name='status',
-            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), ('STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
+            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), (
+                'STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
         ),
         migrations.AlterField(
             model_name='project',
             name='project_type',
-            field=models.CharField(choices=[('PERS', 'Personal'), ('GROUP', 'Group')], default='GROUP', max_length=5),
+            field=models.CharField(
+                choices=[('PERS', 'Personal'), ('GROUP', 'Group')], default='GROUP', max_length=5),
         ),
         migrations.AlterField(
             model_name='projectexecutioninfo',
@@ -96,12 +101,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='run',
             name='status',
-            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), ('STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
+            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), (
+                'STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
         ),
         migrations.AlterField(
             model_name='runset',
             name='run_set_type',
-            field=models.CharField(choices=[('INT', 'Internal'), ('EXT', 'External')], default='INT', max_length=3),
+            field=models.CharField(
+                choices=[('INT', 'Internal'), ('EXT', 'External')], default='INT', max_length=3),
         ),
         migrations.AlterField(
             model_name='runsetaliasnamemap',
@@ -126,27 +133,32 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='runsetresult',
             name='run_set_type',
-            field=models.BigIntegerField(choices=[('INT', 'Internal'), ('EXT', 'External')], default='INT'),
+            field=models.BigIntegerField(
+                choices=[('INT', 'Internal'), ('EXT', 'External')], default='INT'),
         ),
         migrations.AlterField(
             model_name='runsetresult',
             name='status',
-            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), ('STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
+            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), (
+                'STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
         ),
         migrations.AlterField(
             model_name='steplog',
             name='step_log_type',
-            field=models.CharField(choices=[('INS', 'Instruction'), ('INS_BIN', 'Instruction Begin'), ('INS_END', 'Instruction End'), ('PASS', 'Pass'), ('ELE_NF', 'Element Not Found'), ('T/O', 'Time Out'), ('EXCEPT', 'Exception'), ('FAIL', 'Fail')], default='INS', max_length=7),
+            field=models.CharField(choices=[('INS', 'Instruction'), ('INS_BIN', 'Instruction Begin'), ('INS_END', 'Instruction End'), ('PASS', 'Pass'), (
+                'ELE_NF', 'Element Not Found'), ('T/O', 'Time Out'), ('EXCEPT', 'Exception'), ('FAIL', 'Fail')], default='INS', max_length=7),
         ),
         migrations.AlterField(
             model_name='systemrequirement',
             name='system_requirement_type',
-            field=models.CharField(choices=[('CORE', 'Core'), ('RAM', 'Ram'), ('OS', 'Os'), ('B/W', 'Bandwidth')], default='CORE', max_length=4),
+            field=models.CharField(choices=[('CORE', 'Core'), ('RAM', 'Ram'), (
+                'OS', 'Os'), ('B/W', 'Bandwidth')], default='CORE', max_length=4),
         ),
         migrations.AlterField(
             model_name='testcase',
             name='test_case_type',
-            field=models.CharField(choices=[('JSON', 'Json'), ('JM', 'Jmeter'), ('ANDRO', 'Android')], default='JSON', max_length=5),
+            field=models.CharField(choices=[(
+                'JSON', 'Json'), ('JM', 'Jmeter'), ('ANDRO', 'Android')], default='JSON', max_length=5),
         ),
         migrations.AlterField(
             model_name='testcasedriveraliasmap',
@@ -161,7 +173,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='testcaseexecutioninfo',
             name='latest_run_status_id',
-            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), ('STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
+            field=models.CharField(choices=[('NEW', 'New'), ('WIP', 'Wip'), ('PASS', 'Pass'), ('FAIL', 'Fail'), ('ERROR', 'Error'), (
+                'STOP', 'Stop'), ('N/A', 'Na'), ('T/O', 'Timeout'), ('TERM', 'Terminated')], default='NEW', max_length=5),
         ),
         migrations.AlterField(
             model_name='testcaseinstructiontypemap',

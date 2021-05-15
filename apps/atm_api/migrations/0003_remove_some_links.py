@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('api', '0002_remove_dev_models'),
+        ('atm_api', '0002_remove_dev_models'),
     ]
 
     operations = [
@@ -33,7 +33,8 @@ class Migration(migrations.Migration):
                 ('parameter', models.JSONField()),
                 ('uri', models.TextField(blank=True, null=True)),
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
-                ('file_type', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='api.filetype')),
+                ('file_type', models.ForeignKey(
+                    on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.filetype')),
             ],
             options={
                 'db_table': '_file',
@@ -52,12 +53,15 @@ class Migration(migrations.Migration):
                 ('data', models.JSONField()),
                 ('start_at', models.DateTimeField(blank=True, null=True)),
                 ('end_at', models.DateTimeField(blank=True, null=True)),
-                ('logical_order_index', models.CharField(blank=True, max_length=20, null=True)),
+                ('logical_order_index', models.CharField(
+                    blank=True, max_length=20, null=True)),
                 ('input_data', models.TextField(blank=True, null=True)),
-                ('input_type', models.CharField(blank=True, max_length=50, null=True)),
+                ('input_type', models.CharField(
+                    blank=True, max_length=50, null=True)),
                 ('input_parameter', models.JSONField()),
                 ('output_data', models.TextField(blank=True, null=True)),
-                ('output_type', models.CharField(blank=True, max_length=50, null=True)),
+                ('output_type', models.CharField(
+                    blank=True, max_length=50, null=True)),
                 ('output_parameter', models.JSONField()),
                 ('expected_value', models.TextField(blank=True, null=True)),
                 ('return_value', models.TextField(blank=True, null=True)),
@@ -79,8 +83,10 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(primary_key=True, serialize=False)),
                 ('updated_at', models.DateTimeField()),
                 ('created_at', models.DateTimeField()),
-                ('instruction_result', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='api.instructionresult')),
-                ('step_log_type', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='api.steplogtype')),
+                ('instruction_result', models.ForeignKey(
+                    on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.instructionresult')),
+                ('step_log_type', models.ForeignKey(
+                    on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.steplogtype')),
             ],
             options={
                 'db_table': '_step_log',
@@ -287,70 +293,78 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='driverpack',
             name='drivers',
-            field=models.ManyToManyField(to='api.Driver'),
+            field=models.ManyToManyField(to='atm_api.Driver'),
         ),
         migrations.AddField(
             model_name='drivertype',
             name='instruction_types',
-            field=models.ManyToManyField(to='api.InstructionType'),
+            field=models.ManyToManyField(to='atm_api.InstructionType'),
         ),
         migrations.AddField(
             model_name='element',
             name='element_locator',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='api.elementlocator'),
+            field=models.ForeignKey(
+                default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.elementlocator'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='elementtype',
             name='element_locators',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='api.elementlocator'),
+            field=models.ForeignKey(
+                default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.elementlocator'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='instructiontype',
             name='element_types',
-            field=models.ManyToManyField(to='api.ElementType'),
+            field=models.ManyToManyField(to='atm_api.ElementType'),
         ),
         migrations.AddField(
             model_name='instructiontype',
             name='instruction_actions',
-            field=models.ManyToManyField(to='api.InstructionAction'),
+            field=models.ManyToManyField(to='atm_api.InstructionAction'),
         ),
         migrations.AddField(
             model_name='testcase',
             name='tags',
-            field=models.ManyToManyField(to='api.Tag'),
+            field=models.ManyToManyField(to='atm_api.Tag'),
         ),
         migrations.AddField(
             model_name='testcasesharefolder',
             name='test_cases',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='api.testcase'),
+            field=models.ForeignKey(
+                default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.testcase'),
             preserve_default=False,
         ),
         migrations.AlterField(
             model_name='element',
             name='element_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='api.elementtype'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.elementtype'),
         ),
         migrations.AlterField(
             model_name='instruction',
             name='driver_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='api.drivertype'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.drivertype'),
         ),
         migrations.AlterField(
             model_name='instruction',
             name='instruction_action',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='api.instructionaction'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.instructionaction'),
         ),
         migrations.AlterField(
             model_name='instructionbundleentry',
             name='element_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='api.elementtype'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.elementtype'),
         ),
         migrations.AlterField(
             model_name='instructionbundleentry',
             name='instruction_action',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='api.instructionaction'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.instructionaction'),
         ),
         migrations.AlterModelTable(
             name='elementlocator',
@@ -404,41 +418,49 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='instructionresult',
             name='instruction_0',
-            field=models.ForeignKey(blank=True, db_column='instruction_id', null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='api.instruction'),
+            field=models.ForeignKey(blank=True, db_column='instruction_id', null=True,
+                                    on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.instruction'),
         ),
         migrations.AddField(
             model_name='instructionresult',
             name='run',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='api.run'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.run'),
         ),
         migrations.AddField(
             model_name='instructionresult',
             name='status',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='api.status'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.status'),
         ),
         migrations.AddField(
             model_name='file',
             name='instruction_result',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='api.instructionresult'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.instructionresult'),
         ),
         migrations.AddField(
             model_name='file',
             name='run',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='api.run'),
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.run'),
         ),
         migrations.AddField(
             model_name='executionlog',
             name='instruction_result',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='api.instructionresult'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.instructionresult'),
         ),
         migrations.AddField(
             model_name='executionlog',
             name='log_level',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='api.loglevel'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.loglevel'),
         ),
         migrations.AddField(
             model_name='executionlog',
             name='run',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='api.run'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.DO_NOTHING, to='atm_api.run'),
         ),
     ]
