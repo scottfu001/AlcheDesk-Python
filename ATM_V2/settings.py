@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # the api app
-    'apps.atm_api',
+    'apps.api',
 
     # third party
     'rest_framework',

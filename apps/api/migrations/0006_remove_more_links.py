@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('atm_api', '0005_rename_tables'),
+        ('api', '0005_rename_tables'),
     ]
 
     operations = [
@@ -132,32 +132,32 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='instructionaction',
             name='Instruction_actions',
-            field=models.ManyToManyField(to='atm_api.InstructionAction'),
+            field=models.ManyToManyField(to='api.InstructionAction'),
         ),
         migrations.AddField(
             model_name='notification',
             name='email_notification_targets',
-            field=models.ManyToManyField(to='atm_api.EmailNotificationTarget'),
+            field=models.ManyToManyField(to='api.EmailNotificationTarget'),
         ),
         migrations.AddField(
             model_name='runset',
             name='alias',
-            field=models.ManyToManyField(to='atm_api.Alias'),
+            field=models.ManyToManyField(to='api.Alias'),
         ),
         migrations.AddField(
             model_name='runset',
             name='notifications',
-            field=models.ManyToManyField(to='atm_api.Notification'),
+            field=models.ManyToManyField(to='api.Notification'),
         ),
         migrations.AddField(
             model_name='runset',
             name='test_cases',
-            field=models.ManyToManyField(to='atm_api.TestCase'),
+            field=models.ManyToManyField(to='api.TestCase'),
         ),
         migrations.AddField(
             model_name='systemrequirementpack',
             name='system_requirements',
-            field=models.ManyToManyField(to='atm_api.SystemRequirement'),
+            field=models.ManyToManyField(to='api.SystemRequirement'),
         ),
         migrations.DeleteModel(
             name='InstructionActionInstructionOptionLink',

@@ -66,3 +66,21 @@ class RunSetType(models.TextChoices):
     """run set type choices for models, max length 3"""
     INTERNAL = 'INT'
     EXTERNAL = 'EXT'
+
+
+class InstructionColor(models.TextChoices):
+    """The color used to displyed the instructions, mac length 3"""
+    BLUE = 'BLU'
+    GREEN = 'GRE'
+    ORANGE = 'ORA'
+    RED = 'RED'
+    GREY = 'GRY'
+    WHITE = 'WHT'
+
+
+class BrowserResolution(models.TextChoices):
+    HD_READY = '1366x768'
+    SXGA = '1280x1024'
+    WXGA = '1280x800'
+    FHD = '1920x1080'
+    WXGAP = '1440x900'

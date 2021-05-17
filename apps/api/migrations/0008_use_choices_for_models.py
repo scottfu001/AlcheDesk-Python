@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('atm_api', '0007_remove_more_models'),
+        ('api', '0007_remove_more_models'),
     ]
 
     operations = [
