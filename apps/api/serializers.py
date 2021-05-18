@@ -18,5 +18,5 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class AliasSerializer(serializers.ModelSerializer):
     class Meta:
         model = Alias
-        fields = ['id', 'name', 'updated_at', 'created_at']
-        read_only_fields = ['url']
+        fields = '__all__'
+        read_only_fields = ['id']

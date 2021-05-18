@@ -69,7 +69,7 @@ class RunSetType(models.TextChoices):
 
 
 class InstructionColor(models.TextChoices):
-    """The color used to displyed the instructions, mac length 3"""
+    """The color used to display the instructions, mac length 3"""
     BLUE = 'BLU'
     GREEN = 'GRE'
     ORANGE = 'ORA'

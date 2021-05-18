@@ -1,18 +1,18 @@
 from django.db import models
-from django.db.models.expressions import F
 from .choices import Status, LogLevel, ProjectType, RunType, RunSetType, StepLogType, TestCaseType, SystemRequirementType, InstructionColor
+from .common import SoftDeleteModel
 
 
-class Alias(models.Model):
+class Alias(models.Model, SoftDeleteModel):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
     comment = models.TextField(blank=True, null=True)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
-    is_deleted = models.BooleanField()
+    deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         db_table = 'alias'
@@ -26,11 +26,11 @@ class Application(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
-    is_deleted = models.BooleanField()
-    log = models.TextField(blank=True, null=True)
+        auto_now=True, blank=True, null=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
     parameter = models.JSONField(default=dict)
-    version = models.TextField(blank=True, null=True)
+    version = models.CharField(max_length=255, blank=False,
+                               null=False, unique=True)
     project = models.ForeignKey(
         'Project', models.DO_NOTHING, blank=True, null=True)
 
@@ -48,20 +48,20 @@ class Driver(models.Model):
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
     comment = models.TextField(blank=True, null=True)
-    is_active = models.BooleanField()
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     is_default = models.BooleanField()
-    driver_type = models.TextField(blank=False, null=False)
+    driver_type = models.CharField(max_length=255, blank=False,
+                                   null=False, unique=True)
     parameter = models.JSONField(default=dict)
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
-    version = models.TextField(blank=True, null=True)
+    version = models.CharField(max_length=255, blank=False,
+                               null=False, unique=True)
     property = models.JSONField()
     execution_count = models.BigIntegerField()
-    log = models.TextField(blank=True, null=True)
     resource_md5 = models.CharField(max_length=32, blank=True, null=True)
 
     class Meta:
@@ -70,16 +70,16 @@ class Driver(models.Model):
 
 class DriverPack(models.Model):
     id = models.BigAutoField(primary_key=True)
-    name = models.TextField(unique=True)
+    name = models.CharField(max_length=255, blank=False,
+                            null=False, unique=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     execution_count = models.BigIntegerField()
     drivers = models.ManyToManyField(Driver)
     comment = models.TextField(blank=True, null=True)
-    is_deleted = models.BooleanField()
-    log = models.TextField(blank=True, null=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
     is_default = models.BooleanField()
     driver_types = models.JSONField(default=list)
     alias = models.JSONField(default=list)
@@ -93,15 +93,13 @@ class Element(models.Model):
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
     comment = models.TextField(blank=True, null=True)
-    locator_value = models.TextField(blank=True, null=True)
-    html_position_x = models.TextField(blank=True, null=True)
-    html_position_y = models.TextField(blank=True, null=True)
-    is_deleted = models.BooleanField()
+    locator_value = models.CharField(max_length=260, blank=False,
+                                     null=False, unique=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
-    log = models.TextField(blank=True, null=True)
+        auto_now=True, blank=True, null=True)
     element_type = models.ForeignKey(
         'ElementType', models.DO_NOTHING, blank=False, null=False)
     element_locator = models.ForeignKey(
@@ -129,8 +127,8 @@ class Element(models.Model):
 
 class ElementLocator(models.Model):
     id = models.BigAutoField(primary_key=True)
-    name = models.TextField(unique=True)
-    is_active = models.BooleanField()
+    name = models.CharField(max_length=255, blank=False,
+                            null=False, unique=True)
 
     class Meta:
         db_table = 'element_locator'
@@ -140,7 +138,6 @@ class ElementType(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
-    is_active = models.BooleanField()
     is_driver = models.BooleanField()
     element_locators = models.ForeignKey(
         ElementLocator, models.DO_NOTHING, null=False, blank=False)
@@ -153,10 +150,10 @@ class EmailNotificationTarget(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
-    email_address = models.TextField()
+    email_address = models.EmailField(max_length=254)
     comment = models.TextField(blank=True, null=True)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
 
@@ -168,13 +165,13 @@ class Instruction(models.Model):
     comment = models.TextField(blank=True, null=True)
     id = models.BigAutoField(primary_key=True)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     input = models.TextField(blank=True, null=True)
     element = models.ForeignKey(
         Element, models.DO_NOTHING, blank=True, null=True)
-    is_deleted = models.BooleanField()
+    deleted_at = models.DateTimeField(blank=True, null=True)
     project = models.ForeignKey(
         'Project', models.DO_NOTHING, blank=True, null=True)
     application = models.ForeignKey(
@@ -182,7 +179,6 @@ class Instruction(models.Model):
     section = models.ForeignKey(
         'Section', models.DO_NOTHING, blank=True, null=True)
     order_index = models.BigIntegerField()
-    log = models.TextField(blank=True, null=True)
     data = models.JSONField(default=dict)
     color = models.CharField(max_length=3, blank=False, null=False,
                              choices=InstructionColor.choices, default=InstructionColor.WHITE)
@@ -201,7 +197,8 @@ class Instruction(models.Model):
     resource_md5 = models.CharField(max_length=32, blank=True, null=True)
     element_type = models.ForeignKey(
         ElementType, models.DO_NOTHING, blank=True, null=True)
-    driver_type = models.TextField(blank=True, null=True)
+    driver_type = models.CharField(max_length=255, blank=False,
+                                   null=False, unique=True)
     ref_test_case_overwrite = models.ForeignKey(
         'TestCaseOverwrite', models.DO_NOTHING, blank=True, null=True, related_name='ref_test_case_overwrite')
     test_case_share_folder_id = models.BigIntegerField(blank=True, null=True)
@@ -215,7 +212,6 @@ class InstructionAction(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
-    is_active = models.BooleanField()
     Instruction_actions = models.ManyToManyField('InstructionAction')
 
     class Meta:
@@ -227,12 +223,11 @@ class InstructionOption(models.Model):
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     is_value_required = models.BooleanField()
     comment = models.TextField(blank=True, null=True)
-    is_active = models.BooleanField()
 
     class Meta:
         db_table = 'instruction_option'
@@ -251,7 +246,6 @@ class InstructionOverwrite(models.Model):
     data = models.JSONField(default=dict)
     instruction_type = models.ForeignKey(
         'InstructionType', models.DO_NOTHING, related_name='instruction_type')
-    log = models.TextField(blank=True, null=True)
 
     class Meta:
         db_table = 'instruction_overwrite'
@@ -265,9 +259,9 @@ class InstructionType(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
-    is_active = models.BooleanField()
     is_driver = models.BooleanField()
-    driver_type = models.TextField(blank=False, null=False)
+    driver_type = models.CharField(max_length=255, blank=False,
+                                   null=False, unique=True)
     is_element_required = models.BooleanField()
     virtual_element = models.ForeignKey(
         Element, models.DO_NOTHING, blank=True, null=True)
@@ -281,16 +275,16 @@ class InstructionType(models.Model):
 
 class Notification(models.Model):
     id = models.BigAutoField(primary_key=True)
-    subject = models.TextField(blank=True, null=True)
+    subject = models.CharField(max_length=255, blank=False,
+                               null=False, unique=True)
     messages = models.TextField(blank=True, null=True)
     attachments = models.TextField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    log = models.TextField(blank=True, null=True)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
-    is_deleted = models.BooleanField()
+    deleted_at = models.DateTimeField(blank=True, null=True)
     email_notification_targets = models.ManyToManyField(
         EmailNotificationTarget)
 
@@ -302,7 +296,7 @@ class ExecutionLog(models.Model):
     id = models.BigAutoField(primary_key=True)
     message = models.TextField()
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     log_level = models.CharField(
@@ -321,10 +315,11 @@ class File(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     uuid = models.UUIDField()
     parameter = models.JSONField(default=dict)
-    type = models.TextField(blank=False, null=False, default='log')
+    type = models.CharField(max_length=255, blank=False,
+                            null=False, unique=True)
     instruction_result = models.ForeignKey(
         'InstructionResult', models.DO_NOTHING, blank=True, null=True)
     uri = models.TextField(blank=True, null=True)
@@ -337,19 +332,18 @@ class File(models.Model):
 
 class InstructionResult(models.Model):
     id = models.BigAutoField(primary_key=True)
-    action = models.TextField()
+    action = models.CharField(max_length=255, blank=False,
+                              null=False, unique=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     status = models.CharField(max_length=5,
                               blank=False, null=False, choices=Status.choices, default=Status.NEW)
-    log = models.TextField(blank=True, null=True)
     is_finished = models.BooleanField()
     instruction = models.JSONField(default=dict)
     data = models.JSONField(default=dict)
     run = models.ForeignKey('Run', models.DO_NOTHING)
-
     start_at = models.DateTimeField(blank=True, null=True)
     end_at = models.DateTimeField(blank=True, null=True)
     logical_order_index = models.CharField(
@@ -377,7 +371,7 @@ class StepLog(models.Model):
     message = models.TextField()
     id = models.BigAutoField(primary_key=True)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     instruction_result = models.ForeignKey(
@@ -391,17 +385,18 @@ class StepLog(models.Model):
 
 class Project(models.Model):
     id = models.BigAutoField(primary_key=True)
-    name = models.TextField()
+    name = models.CharField(max_length=255, blank=False,
+                            null=False, unique=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    is_deleted = models.BooleanField()
-    log = models.TextField(blank=True, null=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
     project_type = models.CharField(max_length=5,
                                     blank=False, null=False, choices=ProjectType.choices, default=ProjectType.GROUP)
-    version = models.TextField(blank=True, null=True)
+    version = models.CharField(max_length=255, blank=False,
+                               null=False, unique=True)
 
     class Meta:
         db_table = 'project'
@@ -430,7 +425,7 @@ class ProjectExecutionInfo(models.Model):
     passed_test_case_number = models.IntegerField()
     total_test_case_number = models.IntegerField()
     test_case_ids = models.JSONField(default=list)
-    project_is_deleted = models.BooleanField()
+    project_deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         db_table = 'project_execution_info'
@@ -464,8 +459,8 @@ class Run(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
-    log = models.TextField(blank=True, null=True)
+        auto_now=True, blank=True, null=True)
+
     status = models.CharField(max_length=5,
                               blank=False, null=False, choices=Status.choices, default=Status.NEW)
     is_finished = models.BooleanField()
@@ -482,7 +477,8 @@ class Run(models.Model):
     is_recorded = models.BigIntegerField(blank=True, null=True)
     test_case_overwrite = models.JSONField(blank=True, null=True)
     test_case_overwrite_id = models.BigIntegerField(blank=True, null=True)
-    trigger_source = models.TextField(blank=True, null=True)
+    trigger_source = models.GenericIPAddressField(
+        protocol='both', unpack_ipv4=True)
     drivers = models.JSONField(blank=True, null=True)
     uuid = models.UUIDField()
     test_case_uuid = models.UUIDField(blank=True, null=True)
@@ -490,7 +486,6 @@ class Run(models.Model):
     executable_instruction_number = models.BigIntegerField(
         blank=True, null=True)
     system_requirements = models.JSONField(blank=True, null=True)
-    # Field renamed because of name conflict.
     system_requirement_pack = models.JSONField(
         db_column='system_requirement_pack', blank=True, null=True)
     result_overwritten = models.IntegerField()
@@ -502,7 +497,6 @@ class Run(models.Model):
 
 class RunExecutionInfo(models.Model):
     run = models.OneToOneField(Run, models.DO_NOTHING, primary_key=True)
-    run_name = models.TextField()
     run_type = models.CharField(max_length=3,
                                 blank=False, null=False, choices=RunType.choices, default=RunType.PRODUCTION)
     status = models.CharField(max_length=5,
@@ -515,13 +509,11 @@ class RunExecutionInfo(models.Model):
     executable_instruction_number = models.IntegerField()
     instruction_executed_count = models.BigIntegerField()
     instruction_pass_count = models.BigIntegerField()
-    trigger_source = models.TextField(blank=True, null=True)
+    trigger_source = models.GenericIPAddressField(
+        protocol='both', unpack_ipv4=True)
     driver_pack_md5 = models.UUIDField(blank=True, null=True)
     test_case_overwrite_md5 = models.UUIDField(blank=True, null=True)
     test_case_md5 = models.UUIDField(blank=True, null=True)
-    driver_pack_name = models.TextField(blank=True, null=True)
-    test_case_overwrite_name = models.TextField(blank=True, null=True)
-    test_case_name = models.TextField(blank=True, null=True)
     run_priority = models.BigIntegerField(blank=True, null=True)
     run_result_overwritten = models.IntegerField()
     run_project = models.ForeignKey(Project, models.DO_NOTHING)
@@ -537,14 +529,14 @@ class RunExecutionInfo(models.Model):
 
 class RunSet(models.Model):
     id = models.BigAutoField(primary_key=True)
-    name = models.TextField(unique=True)
+    name = models.CharField(max_length=255, blank=False,
+                            null=False, unique=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    is_deleted = models.BooleanField()
-    log = models.TextField(blank=True, null=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
     run_set_type = models.CharField(max_length=3,
                                     blank=False, null=False, choices=RunSetType.choices, default=RunSetType.INTERNAL)
     priority = models.IntegerField()
@@ -560,16 +552,16 @@ class RunSet(models.Model):
 
 class RunSetResult(models.Model):
     id = models.BigAutoField(primary_key=True)
-    name = models.TextField()
+    name = models.CharField(max_length=255, blank=False,
+                            null=False, unique=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     start_at = models.DateTimeField(blank=True, null=True)
     end_at = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=5,
                               blank=False, null=False, choices=Status.choices, default=Status.NEW)
-    log = models.TextField()
     run_set_type = models.BigIntegerField(
         blank=False, null=False, choices=RunSetType.choices, default=RunSetType.INTERNAL)
     run_set = models.ForeignKey(
@@ -597,9 +589,8 @@ class Section(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
-    is_deleted = models.BooleanField()
-    log = models.TextField(blank=True, null=True)
+        auto_now=True, blank=True, null=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
     application = models.ForeignKey(Application, models.DO_NOTHING)
     project = models.ForeignKey(Project, models.DO_NOTHING)
 
@@ -634,11 +625,10 @@ class SystemRequirementPack(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     execution_count = models.BigIntegerField()
     comment = models.TextField(blank=True, null=True)
-    is_deleted = models.BooleanField()
-    log = models.TextField(blank=True, null=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
     is_default = models.BooleanField()
     system_requirements = models.ManyToManyField(SystemRequirement)
 
@@ -652,7 +642,7 @@ class Tag(models.Model):
                             null=False, unique=True)
     comment = models.TextField(blank=True, null=True)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
 
@@ -664,15 +654,14 @@ class Template(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=False,
                             null=False, unique=True)
-    type = models.TextField()
+    type = models.CharField(max_length=255, blank=False,
+                            null=False, unique=True)
     content = models.TextField()
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
-    log = models.TextField(blank=True, null=True)
-    mode = models.TextField()
-    is_deleted = models.BooleanField()
+    deleted_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         db_table = 'template'
@@ -685,11 +674,10 @@ class TestCase(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     is_flagged = models.BooleanField()
     comment = models.TextField(blank=True, null=True)
-    log = models.TextField(blank=True, null=True)
-    is_deleted = models.BooleanField()
+    deleted_at = models.DateTimeField(blank=True, null=True)
     priority = models.IntegerField()
     test_case_type = models.CharField(max_length=5,
                                       blank=False, null=False, choices=TestCaseType.choices, default=TestCaseType.JSON)
@@ -701,7 +689,8 @@ class TestCase(models.Model):
     parameter = models.JSONField(default=dict)
     uuid = models.UUIDField()
     singleton = models.BooleanField()
-    project_name = models.TextField()
+    project_name = models.CharField(max_length=255, blank=False,
+                                    null=False, unique=True)
     tags = models.JSONField(default=list)
     alias = models.JSONField(default=list)
     driver_types = models.JSONField(default=list)
@@ -737,7 +726,7 @@ class TestCaseExecutionInfo(models.Model):
     latest_run_executable_instruction_number = models.BigIntegerField(
         blank=True, null=True)
     latest_run_instruction_fail_count = models.IntegerField()
-    test_case_is_deleted = models.BooleanField()
+    test_case_deleted_at = models.DateTimeField(blank=True, null=True)
     test_case_project_id = models.BigIntegerField()
 
     class Meta:
@@ -749,12 +738,11 @@ class TestCaseOption(models.Model):
                             null=False, unique=True)
     id = models.BigAutoField(primary_key=True)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     comment = models.TextField(blank=True, null=True)
     is_value_required = models.BooleanField()
-    is_active = models.BooleanField()
 
     class Meta:
         db_table = 'test_case_option'
@@ -767,11 +755,10 @@ class TestCaseOverwrite(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     test_case = models.ForeignKey(TestCase, models.DO_NOTHING)
-    is_deleted = models.BooleanField()
+    deleted_at = models.DateTimeField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
-    log = models.TextField(blank=True, null=True)
 
     class Meta:
         db_table = 'test_case_overwrite'
@@ -787,11 +774,10 @@ class TestCaseShareFolder(models.Model):
                             null=False, unique=True)
     description = models.TextField(blank=True, null=True)
     updated_at = models.DateTimeField(
-        auto_now_add=True, blank=False, null=False)
+        auto_now=True, blank=True, null=True)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
-    is_deleted = models.BooleanField()
-    log = models.TextField(blank=True, null=True)
+    deleted_at = models.DateTimeField(blank=True, null=True)
     comment = models.TextField(blank=True, null=True)
     test_cases = models.ForeignKey(TestCase, models.DO_NOTHING)
 
